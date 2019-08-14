@@ -30,6 +30,13 @@ describe("TodoConller.getTodos", () => {
     expect(res.statusCode).toBe(200);
     expect(res._getJSONData()).toEqual(todos);
   });
+  it("returns an error", async () => {
+    const errorMessage = { message: "Error getting data" };
+    const rejectedPromise = Promise.reject(errorMessage);
+    TodoModel.find.mockReturnValue(rejectedPromise);
+    await TodoController.getTodos(req, res, next);
+    expect(next).toHaveBeenCalledWith(errorMessage);
+  });
 });
 
 describe("TodoController.addTodo", () => {

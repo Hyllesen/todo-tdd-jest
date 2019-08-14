@@ -10,6 +10,10 @@ exports.addTodo = async (req, res, next) => {
 };
 
 exports.getTodos = async (req, res, next) => {
-  const todos = await TodoModel.find({});
-  return res.status(200).json(todos);
+  try {
+    const todos = await TodoModel.find({});
+    return res.status(200).json(todos);
+  } catch (error) {
+    next(error);
+  }
 };
