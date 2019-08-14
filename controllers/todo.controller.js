@@ -10,8 +10,15 @@ exports.addTodo = async (req, res, next) => {
 };
 
 exports.updateTodo = async (req, res, next) => {
-  const updatedModel = TodoModel.findByIdAndUpdate(req.params.todoId);
-  return res.status(200).json(updatedModel);
+  try {
+    const updatedModel = await TodoModel.findByIdAndUpdate(req.params.todoId);
+    if (updatedModel) {
+      return res.status(200).json(updatedModel);
+    }
+    return res.status(404).json({ message: "Could not find id" });
+  } catch (err) {
+    next(err);
+  }
 };
 
 exports.getTodos = async (req, res, next) => {

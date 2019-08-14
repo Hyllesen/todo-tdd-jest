@@ -34,10 +34,26 @@ describe("TodoController.updateTodo", () => {
   });
 
   it("returns updated todo after update", async () => {
-    TodoModel.findByIdAndUpdate.mockReturnValue(updatedTodo);
+    const promise = Promise.resolve(updatedTodo);
+    TodoModel.findByIdAndUpdate.mockReturnValue(promise);
     await TodoController.updateTodo(req, res, next);
     expect(res.statusCode).toBe(200);
     expect(res._getJSONData()).toStrictEqual(updatedTodo);
+  });
+
+  it("returns 404 not found if no id", async () => {
+    TodoModel.findByIdAndUpdate.mockReturnValue(null);
+    await TodoController.updateTodo(req, res, next);
+    expect(res.statusCode).toBe(404);
+    expect(res._getJSONData()).toStrictEqual({ message: "Could not find id" });
+  });
+
+  it("returns 500 on invalid id", async () => {
+    const errorMessage = { message: "Invalid object id" };
+    const rejectedPromise = Promise.reject(errorMessage);
+    TodoModel.findByIdAndUpdate.mockReturnValue(rejectedPromise);
+    await TodoController.updateTodo(req, res, next);
+    expect(next).toBeCalledWith(errorMessage);
   });
 });
 
