@@ -16,7 +16,7 @@ describe("TodoController", () => {
   });
   it("saves TodoModel with passed arguments", () => {
     req.body = newTodo;
-    TodoController.saveTodo(req);
+    TodoController.saveTodo(req, res, next);
     expect(TodoModel.save).toHaveBeenCalledWith(newTodo);
   });
   it("returns response with 201 & json body", async () => {
