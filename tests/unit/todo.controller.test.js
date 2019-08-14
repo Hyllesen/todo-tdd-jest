@@ -51,19 +51,23 @@ describe("TodoController.getTodoById", () => {
     await TodoController.getTodoById(req, res, next);
     expect(TodoModel.findById).toHaveBeenCalledWith(req.params.todoId);
   });
+
   it("should return the requested todo object", async () => {
     TodoModel.findById.mockReturnValue(createdTodo);
     await TodoController.getTodoById(req, res, next);
     expect(res.statusCode).toBe(200);
     expect(res._getJSONData()).toEqual(createdTodo);
   });
+
   it("should do error handling", async () => {
-    const errorMessage = { message: "could not find object id" };
-    const rejectedPromise = Promise.reject(errorMessage);
-    TodoModel.findById.mockReturnValue(rejectedPromise);
+    const errorMessage = {
+      message: "Could not find todo with id not-existing-id",
+      statusCode: 404
+    };
+    TodoModel.findById.mockReturnValue(null);
     req.params.todoId = "not-existing-id";
     await TodoController.getTodoById(req, res, next);
-    expect(next).toHaveBeenCalledWith(errorMessage);
+    expect(next).toHaveBeenCalledWith(expect.objectContaining(errorMessage));
   });
 });
 

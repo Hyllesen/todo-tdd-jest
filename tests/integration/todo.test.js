@@ -23,7 +23,7 @@ describe("TodoRoutes", () => {
       .post(baseUrl)
       .send({ title: "wash dishes" })
       .catch(response => {
-        expect(response.statusCode(500));
+        expect(response.statusCode).toBe(500);
         expect(response.body).ToEqual({
           message: "Todo validation failed: done: Path `done` is required."
         });
@@ -52,7 +52,11 @@ describe("TodoRoutes", () => {
     return request(app)
       .get(baseUrl + "not-existing-id")
       .then(response => {
-        expect(response.statusCode).toBe(404);
+        expect(response.statusCode).toBe(500);
+        expect(response.body).toEqual({
+          message:
+            'Cast to ObjectId failed for value "not-existing-id" at path "_id" for model "Todo"'
+        });
       });
   });
 });
