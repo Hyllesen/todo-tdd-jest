@@ -9,6 +9,7 @@ let req, res, next;
 
 TodoModel.create = jest.fn();
 TodoModel.find = jest.fn();
+TodoModel.findById = jest.fn();
 next = jest.fn();
 
 beforeEach(() => {
@@ -16,7 +17,7 @@ beforeEach(() => {
   res = httpMocks.createResponse();
 });
 
-describe("TodoConller.getTodos", () => {
+describe("TodoController.getTodos", () => {
   it("has a getTodos method", () => {
     expect(typeof TodoController.getTodos).toBe("function");
   });
@@ -36,6 +37,25 @@ describe("TodoConller.getTodos", () => {
     TodoModel.find.mockReturnValue(rejectedPromise);
     await TodoController.getTodos(req, res, next);
     expect(next).toHaveBeenCalledWith(errorMessage);
+  });
+});
+
+describe("TodoController.getTodoById", () => {
+  beforeEach(() => {
+    req.params.todoId = "5d518ffa70a07c133362a37d";
+  });
+  it("has a getTodoById", () => {
+    expect(typeof TodoController.getTodoById).toBe("function");
+  });
+  it("should lookup a TodoModel with request.params.todoId", async () => {
+    await TodoController.getTodoById(req, res, next);
+    expect(TodoModel.findById).toHaveBeenCalledWith(req.params.todoId);
+  });
+  it("should return the requested todo object", async () => {
+    TodoModel.findById.mockReturnValue(createdTodo);
+    await TodoController.getTodoById(req, res, next);
+    expect(res.statusCode).toBe(200);
+    expect(res._getJSONData()).toEqual(createdTodo);
   });
 });
 
