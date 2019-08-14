@@ -5,7 +5,7 @@ const newTodo = require("../mock-data/new-todo.json");
 const baseUrl = "/todos";
 
 describe("TodoRoutes", () => {
-  it("POST " + baseUrl, () => {
+  test("POST " + baseUrl, () => {
     return request(app)
       .post(baseUrl)
       .send(newTodo)
@@ -25,6 +25,15 @@ describe("TodoRoutes", () => {
         expect(response.body).ToEqual({
           message: "Todo validation failed: done: Path `done` is required."
         });
+      });
+  });
+  test("GET " + baseUrl, () => {
+    return request(app)
+      .get(baseUrl)
+      .then(response => {
+        expect(response.statusCode).toBe(200);
+        expect(response.body).not.toBe({});
+        expect(response.body[0]._id).toBeDefined();
       });
   });
 });

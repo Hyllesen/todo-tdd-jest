@@ -4,4 +4,6 @@ const router = express.Router();
 
 router.post("/", todoController.addTodo);
 
+router.get("/", todoController.getTodos);
+
 module.exports = router;
