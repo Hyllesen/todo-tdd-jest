@@ -1,37 +1,32 @@
-const { when } = require("jest-when");
 const TodoController = require("../../controllers/todo.controller");
 const httpMocks = require("node-mocks-http");
 const TodoModel = require("../../models/todo.model");
 const newTodo = require("../mock-data/new-todo.json");
 const createdTodo = require("../mock-data/created-todo.json");
 
-TodoModel.save = jest.fn();
-
 let req, res, next;
+
+TodoModel.create = jest.fn();
 
 describe("TodoController", () => {
   beforeEach(() => {
     req = httpMocks.createRequest();
     res = httpMocks.createResponse();
   });
+
   it("has a saveTodo method", () => {
-    expect(typeof TodoController.saveTodo).toBe("function");
+    expect(typeof TodoController.addTodo).toBe("function");
   });
-  it("has a returnSomething method", () => {
-    expect(typeof TodoController.returnSomething).toBe("function");
-  });
-  it("returns something from a method", async () => {
-    expect(await TodoController.returnSomething()).toBe("billah");
-  });
+
   it("saves TodoModel with passed arguments", () => {
     req.body = newTodo;
-    TodoController.saveTodo(req, res, next);
-    expect(TodoModel.save).toHaveBeenCalledWith(newTodo);
+    TodoController.addTodo(req, res, next);
+    expect(TodoModel.create).toHaveBeenCalledWith(newTodo);
   });
   it("returns response with 201 & json body", async () => {
     req.body = newTodo;
-    TodoModel.save.mockReturnValue(createdTodo);
-    await TodoController.saveTodo(req, res, next);
+    TodoModel.create.mockReturnValue(createdTodo);
+    await TodoController.addTodo(req, res, next);
     const json = res._getJSONData();
     expect(json).toEqual(createdTodo);
     expect(res.statusCode).toBe(201);
