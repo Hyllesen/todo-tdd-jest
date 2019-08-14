@@ -8,7 +8,6 @@ async function connect() {
       if (err) {
         console.error("Error connecting to mongodb: " + err);
       }
-      console.log("Now connected to mongodb");
     }
   );
 }

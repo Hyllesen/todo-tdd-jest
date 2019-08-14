@@ -2,7 +2,9 @@ const request = require("supertest");
 const app = require("../../app");
 const newTodo = require("../mock-data/new-todo.json");
 
-const baseUrl = "/todos";
+const baseUrl = "/todos/";
+
+let todoId;
 
 describe("TodoRoutes", () => {
   test("POST " + baseUrl, () => {
@@ -34,6 +36,17 @@ describe("TodoRoutes", () => {
         expect(response.statusCode).toBe(200);
         expect(response.body).not.toBe({});
         expect(response.body[0]._id).toBeDefined();
+        todoId = response.body[0]._id;
+      });
+  });
+  test("GET " + baseUrl + ":todoId", () => {
+    return request(app)
+      .get(baseUrl + todoId)
+      .then(response => {
+        expect(response.statusCode).toBe(200);
+        expect(response.body).not.toBe({});
+        expect(response.body._id).toBeDefined();
+        todoId = response.body._id;
       });
   });
 });
