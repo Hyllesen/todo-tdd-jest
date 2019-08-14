@@ -46,7 +46,13 @@ describe("TodoRoutes", () => {
         expect(response.statusCode).toBe(200);
         expect(response.body).not.toBe({});
         expect(response.body._id).toBeDefined();
-        todoId = response.body._id;
+      });
+  });
+  test("GET " + baseUrl + ":todoId that doesn't exists", () => {
+    return request(app)
+      .get(baseUrl + "not-existing-id")
+      .then(response => {
+        expect(response.statusCode).toBe(404);
       });
   });
 });

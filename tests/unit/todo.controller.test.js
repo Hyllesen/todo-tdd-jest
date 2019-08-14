@@ -57,6 +57,14 @@ describe("TodoController.getTodoById", () => {
     expect(res.statusCode).toBe(200);
     expect(res._getJSONData()).toEqual(createdTodo);
   });
+  it("should do error handling", async () => {
+    const errorMessage = { message: "could not find object id" };
+    const rejectedPromise = Promise.reject(errorMessage);
+    TodoModel.findById.mockReturnValue(rejectedPromise);
+    req.params.todoId = "not-existing-id";
+    await TodoController.getTodoById(req, res, next);
+    expect(next).toHaveBeenCalledWith(errorMessage);
+  });
 });
 
 describe("TodoController.addTodo", () => {
