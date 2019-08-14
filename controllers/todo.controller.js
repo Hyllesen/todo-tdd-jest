@@ -9,6 +9,11 @@ exports.addTodo = async (req, res, next) => {
   }
 };
 
+exports.updateTodo = async (req, res, next) => {
+  const updatedModel = TodoModel.findByIdAndUpdate(req.params.todoId);
+  return res.status(200).json(updatedModel);
+};
+
 exports.getTodos = async (req, res, next) => {
   try {
     const todos = await TodoModel.find({});

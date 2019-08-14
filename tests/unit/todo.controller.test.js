@@ -3,6 +3,7 @@ const httpMocks = require("node-mocks-http");
 const TodoModel = require("../../models/todo.model");
 const newTodo = require("../mock-data/new-todo.json");
 const createdTodo = require("../mock-data/created-todo.json");
+const updatedTodo = require("../mock-data/updated-todo.json");
 const todos = require("../mock-data/all-todos.json");
 
 let req, res, next;
@@ -10,11 +11,34 @@ let req, res, next;
 TodoModel.create = jest.fn();
 TodoModel.find = jest.fn();
 TodoModel.findById = jest.fn();
+TodoModel.findByIdAndUpdate = jest.fn();
 next = jest.fn();
 
 beforeEach(() => {
   req = httpMocks.createRequest();
   res = httpMocks.createResponse();
+});
+
+describe("TodoController.updateTodo", () => {
+  beforeEach(() => {
+    req.params.todoId = createdTodo._id;
+  });
+
+  it("has a updateTodo method", () => {
+    expect(typeof TodoController.updateTodo).toBe("function");
+  });
+
+  it("call findByIdAndUpdate method on model", async () => {
+    await TodoController.updateTodo(req, res, next);
+    expect(TodoModel.findByIdAndUpdate).toHaveBeenCalledWith(createdTodo._id);
+  });
+
+  it("returns updated todo after update", async () => {
+    TodoModel.findByIdAndUpdate.mockReturnValue(updatedTodo);
+    await TodoController.updateTodo(req, res, next);
+    expect(res.statusCode).toBe(200);
+    expect(res._getJSONData()).toStrictEqual(updatedTodo);
+  });
 });
 
 describe("TodoController.getTodos", () => {
