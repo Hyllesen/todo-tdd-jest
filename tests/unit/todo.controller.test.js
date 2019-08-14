@@ -14,6 +14,15 @@ describe("TodoController", () => {
     req = httpMocks.createRequest();
     res = httpMocks.createResponse();
   });
+  it("has a saveTodo method", () => {
+    expect(typeof TodoController.saveTodo).toBe("function");
+  });
+  it("has a returnSomething method", () => {
+    expect(typeof TodoController.returnSomething).toBe("function");
+  });
+  it("returns something from a method", async () => {
+    expect(await TodoController.returnSomething()).toBe("billah");
+  });
   it("saves TodoModel with passed arguments", () => {
     req.body = newTodo;
     TodoController.saveTodo(req, res, next);

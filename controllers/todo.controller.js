@@ -9,3 +9,12 @@ exports.saveTodo = async (req, res, next) => {
     console.error("erieriemr");
   }
 };
+
+async function sleep() {
+  return new Promise(resolve => setTimeout(resolve, 100));
+}
+
+exports.returnSomething = async () => {
+  await sleep();
+  return "billah";
+};
