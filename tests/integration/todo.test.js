@@ -16,4 +16,15 @@ describe("TodoRoutes", () => {
         expect(response.body._id).toBeDefined();
       });
   });
+  test("ERROR POST " + baseUrl, () => {
+    return request(app)
+      .post(baseUrl)
+      .send({ title: "wash dishes" })
+      .catch(response => {
+        expect(response.statusCode(500));
+        expect(response.body).ToEqual({
+          message: "Todo validation failed: done: Path `done` is required."
+        });
+      });
+  });
 });

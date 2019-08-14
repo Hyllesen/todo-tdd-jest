@@ -7,13 +7,14 @@ const createdTodo = require("../mock-data/created-todo.json");
 let req, res, next;
 
 TodoModel.create = jest.fn();
+next = jest.fn();
 
-describe("TodoController", () => {
-  beforeEach(() => {
-    req = httpMocks.createRequest();
-    res = httpMocks.createResponse();
-  });
+beforeEach(() => {
+  req = httpMocks.createRequest();
+  res = httpMocks.createResponse();
+});
 
+describe("TodoController.addTodo", () => {
   it("has a saveTodo method", () => {
     expect(typeof TodoController.addTodo).toBe("function");
   });
@@ -30,5 +31,15 @@ describe("TodoController", () => {
     const json = res._getJSONData();
     expect(json).toEqual(createdTodo);
     expect(res.statusCode).toBe(201);
+  });
+  it("returns a error on wrong input", async () => {
+    req.body = { title: "miss done property" };
+    const errorMessage = {
+      message: "Todo validation failed: done: Path `done` is required."
+    };
+    const rejectedPromise = Promise.reject(errorMessage);
+    TodoModel.create.mockReturnValue(rejectedPromise);
+    await TodoController.addTodo(req, res, next);
+    expect(next).toHaveBeenCalledWith(errorMessage);
   });
 });
