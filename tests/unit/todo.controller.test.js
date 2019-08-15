@@ -29,8 +29,16 @@ describe("TodoController.updateTodo", () => {
   });
 
   it("call findByIdAndUpdate method on model", async () => {
+    req.body = updatedTodo;
     await TodoController.updateTodo(req, res, next);
-    expect(TodoModel.findByIdAndUpdate).toHaveBeenCalledWith(createdTodo._id);
+    expect(TodoModel.findByIdAndUpdate).toHaveBeenCalledWith(
+      createdTodo._id,
+      updatedTodo,
+      {
+        new: true,
+        useFindAndModify: false
+      }
+    );
   });
 
   it("returns updated todo after update", async () => {

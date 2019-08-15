@@ -1,6 +1,7 @@
 const request = require("supertest");
 const app = require("../../app");
 const newTodo = require("../mock-data/new-todo.json");
+const updatedTodo = require("../mock-data/updated-todo.json");
 
 const baseUrl = "/todos/";
 
@@ -48,7 +49,7 @@ describe("TodoRoutes", () => {
         expect(response.body._id).toBeDefined();
       });
   });
-  test("GET " + baseUrl + ":todoId that doesn't exists", () => {
+  test("GET " + baseUrl + ":todoId that's invalid'", () => {
     return request(app)
       .get(baseUrl + "not-existing-id")
       .then(response => {
@@ -57,6 +58,15 @@ describe("TodoRoutes", () => {
           message:
             'Cast to ObjectId failed for value "not-existing-id" at path "_id" for model "Todo"'
         });
+      });
+  });
+  test("PUT " + baseUrl + ":todoId", () => {
+    return request(app)
+      .put(baseUrl + todoId)
+      .send(updatedTodo)
+      .then(response => {
+        expect(response.statusCode).toBe(200);
+        expect(response.body).toStrictEqual(updatedTodo);
       });
   });
 });

@@ -11,7 +11,11 @@ exports.addTodo = async (req, res, next) => {
 
 exports.updateTodo = async (req, res, next) => {
   try {
-    const updatedModel = await TodoModel.findByIdAndUpdate(req.params.todoId);
+    const updatedModel = await TodoModel.findByIdAndUpdate(
+      req.params.todoId,
+      req.body,
+      { new: true, useFindAndModify: false }
+    );
     if (updatedModel) {
       return res.status(200).json(updatedModel);
     }
