@@ -21,13 +21,32 @@ beforeEach(() => {
 });
 
 describe("TodoController.deleteTodo", () => {
+  beforeEach(() => {
+    req.params.todoId = createdTodo._id;
+  });
+
   it("has a deleteTodo method", () => {
     expect(typeof TodoController.deleteTodo).toBe("function");
   });
   it("it should call findbyidandDelete", async () => {
-    req.params.todoId = createdTodo._id;
     await TodoController.deleteTodo(req, res, next);
     expect(TodoModel.findByIdAndDelete).toHaveBeenCalledWith(createdTodo._id);
+  });
+  it("should return deleted todo", async () => {
+    const deletedTodoModelPromise = Promise.resolve(createdTodo);
+    TodoModel.findByIdAndDelete.mockReturnValue(deletedTodoModelPromise);
+    await TodoController.deleteTodo(req, res, next);
+    expect(res.statusCode).toBe(200);
+    expect(res._getJSONData()).toStrictEqual(createdTodo);
+  });
+  it("should return error 500", async () => {
+    const errorMessage = {
+      message: "Error deleting todo"
+    };
+    const deletedTodoRejectPromise = Promise.reject(errorMessage);
+    TodoModel.findByIdAndDelete.mockReturnValue(deletedTodoRejectPromise);
+    await TodoController.deleteTodo(req, res, next);
+    expect(next).toBeCalledWith(expect.objectContaining(errorMessage));
   });
 });
 
