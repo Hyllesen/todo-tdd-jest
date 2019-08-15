@@ -12,11 +12,23 @@ TodoModel.create = jest.fn();
 TodoModel.find = jest.fn();
 TodoModel.findById = jest.fn();
 TodoModel.findByIdAndUpdate = jest.fn();
+TodoModel.findByIdAndDelete = jest.fn();
 next = jest.fn();
 
 beforeEach(() => {
   req = httpMocks.createRequest();
   res = httpMocks.createResponse();
+});
+
+describe("TodoController.deleteTodo", () => {
+  it("has a deleteTodo method", () => {
+    expect(typeof TodoController.deleteTodo).toBe("function");
+  });
+  it("it should call findbyidandDelete", async () => {
+    req.params.todoId = createdTodo._id;
+    await TodoController.deleteTodo(req, res, next);
+    expect(TodoModel.findByIdAndDelete).toHaveBeenCalledWith(createdTodo._id);
+  });
 });
 
 describe("TodoController.updateTodo", () => {

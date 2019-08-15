@@ -1,8 +1,6 @@
 {
-  "_id": {
-    "$oid": "5d518ffa70a07c133362a37d"
-  },
-  "title": "Do laundry",
-  "done": false,
+  "_id": "5d518ffa70a07c133362a37d",
+  "title": "Make a integration test",
+  "done": true,
   "__v": 0
 }

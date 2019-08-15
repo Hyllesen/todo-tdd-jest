@@ -9,6 +9,10 @@ exports.addTodo = async (req, res, next) => {
   }
 };
 
+exports.deleteTodo = async (req, res, next) => {
+  const deleted = await TodoModel.findByIdAndDelete(req.params.todoId);
+};
+
 exports.updateTodo = async (req, res, next) => {
   try {
     const updatedModel = await TodoModel.findByIdAndUpdate(
