@@ -5,7 +5,7 @@ const updatedTodo = require("../mock-data/updated-todo.json");
 
 const baseUrl = "/todos/";
 
-let todoId, todoBody;
+let todoId, todoIdToDelete, todoBodyToDelete;
 
 describe("TodoRoutes", () => {
   test("POST " + baseUrl, () => {
@@ -39,6 +39,7 @@ describe("TodoRoutes", () => {
         expect(response.body[0]._id).toBeDefined();
         todoId = response.body[0]._id;
         todoBody = response.body[0];
+        todoBodyToDelete = response.body[1];
       });
   });
   test("GET " + baseUrl + ":todoId", () => {
@@ -67,15 +68,24 @@ describe("TodoRoutes", () => {
       .send(updatedTodo)
       .then(response => {
         expect(response.statusCode).toBe(200);
-        expect(response.body).toStrictEqual(updatedTodo);
+        expect(response.body._id).toBeDefined();
+        expect(response.body.title).toBe(updatedTodo.title);
+        expect(response.body.done).toBe(updatedTodo.done);
       });
   });
   test("DELETE " + baseUrl + ":todoId", () => {
     return request(app)
-      .delete(baseUrl + todoId)
+      .delete(baseUrl + todoBodyToDelete._id)
       .then(response => {
         expect(response.statusCode).toBe(200);
-        expect(response.body).toStrictEqual(todoBody);
+        expect(response.body).toStrictEqual(todoBodyToDelete);
+      });
+  });
+  test("DELETE ID NOT FOUND" + baseUrl + ":todoId", () => {
+    return request(app)
+      .delete(baseUrl + "5d518ffa70a07c133362a37d")
+      .then(response => {
+        expect(response.statusCode).toBe(404);
       });
   });
 });

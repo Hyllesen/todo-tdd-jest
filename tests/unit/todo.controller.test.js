@@ -39,6 +39,12 @@ describe("TodoController.deleteTodo", () => {
     expect(res.statusCode).toBe(200);
     expect(res._getJSONData()).toStrictEqual(createdTodo);
   });
+  it("should return error 404", async () => {
+    const nullPromise = Promise.resolve(null);
+    TodoModel.findByIdAndDelete.mockReturnValue(nullPromise);
+    await TodoController.deleteTodo(req, res, next);
+    expect(res.statusCode).toBe(404);
+  });
   it("should return error 500", async () => {
     const errorMessage = {
       message: "Error deleting todo"

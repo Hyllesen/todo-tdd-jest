@@ -12,7 +12,11 @@ exports.addTodo = async (req, res, next) => {
 exports.deleteTodo = async (req, res, next) => {
   try {
     const deleted = await TodoModel.findByIdAndDelete(req.params.todoId);
-    return res.status(200).json(deleted);
+    if (deleted) {
+      return res.status(200).json(deleted);
+    } else {
+      return res.status(404).json({ message: "Could not find id" });
+    }
   } catch (error) {
     next(error);
   }
