@@ -5,7 +5,7 @@ const updatedTodo = require("../mock-data/updated-todo.json");
 
 const baseUrl = "/todos/";
 
-let todoId;
+let todoId, todoBody;
 
 describe("TodoRoutes", () => {
   test("POST " + baseUrl, () => {
@@ -38,6 +38,7 @@ describe("TodoRoutes", () => {
         expect(response.body).not.toBe({});
         expect(response.body[0]._id).toBeDefined();
         todoId = response.body[0]._id;
+        todoBody = response.body[0];
       });
   });
   test("GET " + baseUrl + ":todoId", () => {
@@ -67,6 +68,14 @@ describe("TodoRoutes", () => {
       .then(response => {
         expect(response.statusCode).toBe(200);
         expect(response.body).toStrictEqual(updatedTodo);
+      });
+  });
+  test("DELETE " + baseUrl + ":todoId", () => {
+    return request(app)
+      .delete(baseUrl + todoId)
+      .then(response => {
+        expect(response.statusCode).toBe(200);
+        expect(response.body).toStrictEqual(todoBody);
       });
   });
 });
