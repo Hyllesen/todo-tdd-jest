@@ -8,11 +8,7 @@ const todos = require("../mock-data/all-todos.json");
 
 let req, res, next;
 
-TodoModel.create = jest.fn();
-TodoModel.find = jest.fn();
-TodoModel.findById = jest.fn();
-TodoModel.findByIdAndUpdate = jest.fn();
-TodoModel.findByIdAndDelete = jest.fn();
+jest.mock("../../models/todo.model");
 next = jest.fn();
 
 beforeEach(() => {

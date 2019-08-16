@@ -5,7 +5,7 @@ const updatedTodo = require("../mock-data/updated-todo.json");
 
 const baseUrl = "/todos/";
 
-let todoId, todoIdToDelete, todoBodyToDelete;
+let todoId, todoBodyToDelete;
 
 describe("TodoRoutes", () => {
   test("POST " + baseUrl, () => {
